@@ -172,3 +172,56 @@ form .buttons {
     border-top: 1px dotted #ccc;
     text-align: center;
 }
+
+/** actions **/
+.actions a, 
+.action
+{
+    font-family: Candara,Arial,Helvetica,sans-serif;
+}
+
+.actions {
+    display:block;
+    position:relative;
+    width:auto;
+    margin:0 auto;
+    padding: 15px;
+}
+
+.actions li {
+    display:inline;
+    margin-right: 0em;
+}
+
+.actions a,
+.actions a:link, 
+.actions a:visited,
+.actions a:hover,
+.actions a:active {
+    padding:3px 10px;
+    border: none;
+    background: #ddd;
+    margin: 0;
+    font-size: 90%;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+td a.action,
+td a.action:link, 
+td a.action:visited,
+td a.action:hover, 
+td a.action:active
+{
+    padding:0 6px;
+    padding-right: 10px;
+    background: #ddd;
+    margin-right: 1em;
+    font-size: 90%;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    cursor: pointer;
+    text-decoration: none;
+}

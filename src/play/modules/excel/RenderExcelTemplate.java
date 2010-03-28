@@ -8,6 +8,7 @@ import net.sf.jxls.transformer.XLSTransformer;
 import org.apache.commons.codec.net.URLCodec;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 
+import play.Logger;
 import play.Play;
 import play.exceptions.UnexpectedException;
 import play.mvc.Http.Request;
@@ -42,7 +43,7 @@ public class RenderExcelTemplate extends Result {
 	}
 
 	public RenderExcelTemplate(String templateName, Map<String, Object> beans, String fileName) {
-		this(templateName, beans, fileName, (null == fileName));
+		this(templateName, beans, fileName, false);
 	}
 	
 	public RenderExcelTemplate(String templateName, Map<String, Object> beans, String fileName, boolean inline) {
@@ -60,15 +61,15 @@ public class RenderExcelTemplate extends Result {
                     if (fileName == null) {
                         response.setHeader("Content-Disposition", "inline");
                     } else {
-                        response.setHeader("Content-Disposition", "inline; filename*=utf-8''" + encoder.encode(fileName, "utf-8") + "; filename=\"" + encoder.encode(fileName, "utf-8") + "\"");
+                        response.setHeader("Content-Disposition", "inline; filename=" + encoder.encode(fileName, "utf-8"));
                     }
                 } else if (fileName == null) {
-                    response.setHeader("Content-Disposition", "attachment");
+                    response.setHeader("Content-Disposition", "attachment; filename=export.xls");
                 } else {
-                    response.setHeader("Content-Disposition", "attachment; filename*=utf-8''" + encoder.encode(fileName, "utf-8") + "; filename=\"" + encoder.encode(fileName, "utf-8") + "\"");
+                    response.setHeader("Content-Disposition", "attachment; filename=" + encoder.encode(fileName, "utf-8"));
                 }
             }
-			setContentTypeIfNotSet(response, "application/excel");
+			setContentTypeIfNotSet(response, "application/vnd.ms-excel");
             
     		if (null == tmplRoot) {
     			initTmplRoot();

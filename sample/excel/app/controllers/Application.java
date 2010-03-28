@@ -2,6 +2,7 @@ package controllers;
 
 import static play.modules.excel.Excel.renderExcel;
 
+import java.util.Date;
 import java.util.List;
 
 import models.Contact;
@@ -18,6 +19,13 @@ public class Application extends Controller {
     	Contact person = Contact.findById(id);
     	renderArgs.put("fileName", person.getEntityId() + ".xls");
     	renderExcel(person);
+    }
+    
+    public static void generateAddressBook() {
+    	List<Contact> contacts = Contact.findAll();
+    	Date date = new Date();
+    	renderArgs.put("fileName", "address_book.xls");
+        renderExcel(contacts, date);
     }
 
 }              

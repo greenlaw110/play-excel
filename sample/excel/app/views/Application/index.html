@@ -13,8 +13,12 @@
 <tbody>
 #{list contacts, as: 'person'}
 <tr><td>${person}</td><td>${person.address}</td><td>${person.email}</td><td>${person.mobile}</td>
-<td><a href="@{Application.generateNameCard(person.id)}">generate namecard</a></td></tr>
+<td><a href="@{Application.generateNameCard(person.id)}" class="action">generate namecard</a></td></tr>
 #{/list}
 </tbody>
 </table>
+
+<ul class="actions">
+<li><a href="/addressBook">Address Book</a></li>
+</ul>
 </div>
