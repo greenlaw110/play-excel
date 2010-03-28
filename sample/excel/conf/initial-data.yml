@@ -1,0 +1,18 @@
+# Initial Data
+
+Contact(c1):
+    firstName: Baddie
+    lastName: Kite
+    address: ABC Street
+    mobile: +61-0404000000
+    title: Mr.
+    email: bkite@x.com
+    
+Contact(c2):
+    firstName: Nuke
+    lastName: Bango
+    address: XYZ Street
+    mobile: +61-0404000001
+    title: Ms.
+    email: nbango@y.com
+    
