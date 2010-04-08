@@ -35,7 +35,10 @@ public class RenderExcelTemplate extends Result {
 	
 	private static void initTmplRoot() {
 		VirtualFile appRoot = VirtualFile.open(Play.applicationPath);
-		tmplRoot = appRoot.child("app/views");
+		String rootDef = "app/views";
+		if (Play.configuration.containsKey("excel.template.root"))
+		    rootDef = (String)Play.configuration.get("excel.template.root");
+		tmplRoot = appRoot.child(rootDef);
 	}
 	
 	public RenderExcelTemplate(String templateName, Map<String, Object> beans) {

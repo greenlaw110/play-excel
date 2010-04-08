@@ -63,7 +63,7 @@ public class Excel {
 		if (null == templateBinding.get("fileName")) {
 			templateBinding.put("fileName", templateName.substring(templateName.lastIndexOf("/") + 1) + ".xls");
 		}
-		Logger.info("fileName: " + templateBinding.get("fileName"));
+		//Logger.trace("fileName: " + templateBinding.get("fileName"));
 		try {
 			templateBinding.put("errors", Validation.errors());
 		} catch (Exception ex) {
