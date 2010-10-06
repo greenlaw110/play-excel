@@ -2,6 +2,11 @@ h1. Excel module
 
 The Excel module allows you to render Excel document. It is rather simple to use as it only requires to import a static file.
 
+
+This module helps web developer to generate Excel report. The tool uses the jxls library. 
+
+In order to use the Excel module, you need to create an Excel based template - see http://jxls.sourceforge.net for details instruction.
+
 h2. <a>Enable the Excel module for the application</a>
 
 In the **/conf/application.conf** file, enable the Excel module by adding this line:

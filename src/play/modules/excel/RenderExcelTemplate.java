@@ -6,7 +6,7 @@ import java.util.Map;
 import net.sf.jxls.transformer.XLSTransformer;
 
 import org.apache.commons.codec.net.URLCodec;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.ss.usermodel.Workbook;
 
 import play.Logger;
 import play.Play;
@@ -72,13 +72,13 @@ public class RenderExcelTemplate extends Result {
                     response.setHeader("Content-Disposition", "attachment; filename=" + encoder.encode(fileName, "utf-8"));
                 }
             }
-			setContentTypeIfNotSet(response, "application/vnd.ms-excel");
+			setContentTypeIfNotSet(response, "text/plain");
             
     		if (null == tmplRoot) {
     			initTmplRoot();
     		}
     		InputStream is = tmplRoot.child(templateName).inputstream();
-    		HSSFWorkbook workbook = new XLSTransformer().transformXLS(is, beans);
+    		Workbook workbook = new XLSTransformer().transformXLS(is, beans);
     		workbook.write(response.out);
     		is.close();
 		} catch (Exception e) {
