@@ -6,7 +6,6 @@ The Excel module allows you to render Excel document. It is rather simple to use
 The tool uses the jxls library. 
 <script type="text/javascript" src="http://www.ohloh.net/p/30763/widgets/project_partner_badge.js"></script>
 
-
 In order to use the Excel module, you need to create an Excel based template - see http://jxls.sourceforge.net for details instruction.
 
 h2. <a>What's New in v1.0a
@@ -15,6 +14,10 @@ h2. <a>What's New in v1.0a
 * jxls update to 1.0-RC1 along with it's dependencies
 ** POI 3.6
 ** Jexl 2.0
+
+This module helps web developer to generate Excel report. The tool uses the jxls library. 
+
+In order to use the Excel module, you need to create an Excel based template - see http://jxls.sourceforge.net for details instruction.
 
 h2. <a>Enable the Excel module for the application</a>
 
