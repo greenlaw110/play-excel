@@ -1,8 +1,11 @@
 h1. Excel module
 
 The Excel module allows you to render Excel document. It is rather simple to use as it only requires to import a static file.
+<script type="text/javascript" src="http://www.ohloh.net/p/485873/widgets/project_users_logo.js"></script>
 
-This module helps web developer to generate Excel report. The tool uses the jxls library. 
+The tool uses the jxls library. 
+<script type="text/javascript" src="http://www.ohloh.net/p/30763/widgets/project_partner_badge.js"></script>
+
 
 In order to use the Excel module, you need to create an Excel based template - see http://jxls.sourceforge.net for details instruction.
 
