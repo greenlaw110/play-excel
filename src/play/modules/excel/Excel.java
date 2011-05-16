@@ -23,11 +23,9 @@
  */
 package play.modules.excel;
 
-import java.util.List;
-
-import play.Logger;
+import org.apache.commons.lang.ArrayUtils;
 import play.Play;
-import play.classloading.enhancers.LocalvariablesNamesEnhancer;
+import play.classloading.enhancers.LVEnhancer;
 import play.data.validation.Validation;
 import play.exceptions.PlayException;
 import play.exceptions.TemplateNotFoundException;
@@ -50,8 +48,7 @@ public class Excel {
 		// Template datas
 		Scope.RenderArgs templateBinding = Scope.RenderArgs.current();
 		for (Object o : args) {
-			List<String> names = LocalvariablesNamesEnhancer.LocalVariablesNamesTracer
-					.getAllLocalVariableNames(o);
+            String[] names = LVEnhancer.LVEnhancerRuntime.getParamNames().varargs;
 			for (String name : names) {
 				templateBinding.put(name, o);
 			}
@@ -96,11 +93,11 @@ public class Excel {
 	public static void renderExcel(Object... args) {
 		String templateName = null;
 		final Http.Request request = Http.Request.current();
+        String[] names = LVEnhancer.LVEnhancerRuntime.getParamNames().varargs;
 
 		if (args.length > 0
 				&& args[0] instanceof String
-				&& LocalvariablesNamesEnhancer.LocalVariablesNamesTracer
-						.getAllLocalVariableNames(args[0]).isEmpty()) {
+				&& !ArrayUtils.contains(LVEnhancer.LVEnhancerRuntime.getParamNames().varargs, args[0])) {
 			templateName = args[0].toString();
 		} else {
 			templateName = request.action.replace(".", "/");
