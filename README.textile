@@ -9,6 +9,11 @@ The tool uses the jxls library.
 
 In order to use the Excel module, you need to create an Excel based template - see http://jxls.sourceforge.net for details instruction.
 
+h2. <a>What's New in v1.2
+
+* Update with Play!Framework v1.2
+* Transparent Excel Render
+
 h2. <a>What's New in v1.0a
 
 * support Play 1.1-RC1 
@@ -28,7 +33,7 @@ note, please change the excel.template.root from app/views to some where else wh
 
 h2. <a>Using the Excel module</a>
 
-h3. <a>The renderExcel() method</a>:
+h3. <a>-The renderExcel() method-</a> (only apply for versions before v1.2):
 
 bc. import static play.modules.excel.Excel.*;
 
@@ -38,8 +43,8 @@ The renderExcel() behavior is almost the same as that of render() except the fol
 # the template should be an excel file with ".xls" suffix rather than a text file with ".html"
 # You can use renderArgs.put("fileName", "your-file.xls") to indicate the name of the excel file to be generated
 
-h2. Known Issue
+h2. <a>Set request.format</a> *New in v1.2*
 
-* While using chrome and IE, the filename is not the one specified by "fileName" but the last string in the url. E.g. if the url is http://localhost:9000/1/namecard, the file name will be namecard instead of 1.xls which is specified in the program. There is not such problem in FF.
+Set request.format to 'xls' or 'xlsx' to render user Excel template. The excel template should be put in the same dir as normal html template, the file suffix shall comply with request.format setting. An easy way to set request.format is via route configuration. Please refer to http://www.playframework.org/documentation/1.2.1/routes#content-types for detail
 
 Please refer to the sample for an example.

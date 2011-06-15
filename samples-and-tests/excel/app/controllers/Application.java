@@ -1,7 +1,5 @@
 package controllers;
 
-import static play.modules.excel.Excel.renderExcel;
-
 import java.util.Date;
 import java.util.List;
 
@@ -17,15 +15,16 @@ public class Application extends Controller {
     
     public static void generateNameCard(Long id) {
     	Contact person = Contact.findById(id);
-    	renderArgs.put("fileName", person.getEntityId() + ".xls");
-    	renderExcel(person);
+    	String fileName = person.getId() + ".xls";
+    	request.format = "xls";
+    	render(fileName, person);
     }
     
     public static void generateAddressBook() {
     	List<Contact> contacts = Contact.findAll();
     	Date date = new Date();
-    	renderArgs.put("fileName", "address_book.xls");
-        renderExcel(contacts, date);
+    	String fileName = "address_book.xls";
+        render(fileName, contacts, date);
     }
 
 }              

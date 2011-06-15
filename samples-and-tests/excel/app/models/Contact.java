@@ -30,7 +30,7 @@ public class Contact extends Model {
         @Override
         public void doJob() {
             if (Contact.count() == 0) {
-                Fixtures.load("initial-data.yml");
+                Fixtures.loadModels("initial-data.yml");
             }
         }
     }
