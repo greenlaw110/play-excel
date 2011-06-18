@@ -1,17 +1,22 @@
 package play.modules.excel;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.Map;
 
 import net.sf.jxls.transformer.XLSTransformer;
 
-import org.apache.commons.codec.net.URLCodec;
 import org.apache.poi.ss.usermodel.Workbook;
 
+import play.Logger;
 import play.Play;
 import play.exceptions.UnexpectedException;
+import play.jobs.Job;
+import play.libs.F.Promise;
 import play.mvc.Http.Request;
 import play.mvc.Http.Response;
+import play.mvc.Scope.RenderArgs;
 import play.mvc.results.Result;
 import play.vfs.VirtualFile;
 
@@ -24,11 +29,13 @@ import play.vfs.VirtualFile;
 @SuppressWarnings("serial")
 public class RenderExcel extends Result {
 
-    private static URLCodec encoder = new URLCodec();
+    public static final String RA_FILENAME = "__EXCEL_FILE_NAME__";
+    public static final String RA_ASYNC = "__EXCEL_ASYNC__";
+    public static final String CONF_ASYNC = "excel.async";
+
     private static VirtualFile tmplRoot = null;
     String templateName = null;
     String fileName = null; // recommended report file name
-    boolean inline = true;
     Map<String, Object> beans = null;
 
     private static void initTmplRoot() {
@@ -45,23 +52,41 @@ public class RenderExcel extends Result {
 
     public RenderExcel(String templateName, Map<String, Object> beans,
             String fileName) {
-        this(templateName, beans, fileName, false);
-    }
-
-    public RenderExcel(String templateName, Map<String, Object> beans,
-            String fileName, boolean inline) {
         this.templateName = templateName;
-        this.inline = inline;
         this.beans = beans;
         this.fileName = fileName == null ? fileName_(templateName) : fileName;
     }
     
-    private static String fileName_(String path) {
-        int i = path.lastIndexOf("/");
-        if (-1 == i) return path;
-        return path.substring(++i);
+    public String getFileName() {
+        return fileName;
+    }
+
+    public static boolean async() {
+        Object o = null;
+        if (RenderArgs.current().data.containsKey(RA_ASYNC)) {
+            o = RenderArgs.current().get(RA_ASYNC);
+        } else {
+            o = Play.configuration.get(CONF_ASYNC);
+        }
+        boolean async = false;
+        if (null == o)
+            async = false;
+        else if (o instanceof Boolean)
+            async = (Boolean)o;
+        else
+            async = Boolean.parseBoolean(o.toString());
+        return async;
     }
     
+    private static String fileName_(String path) {
+        if (RenderArgs.current().data.containsKey(RA_FILENAME)) 
+            return RenderArgs.current().get(RA_FILENAME, String.class);
+        int i = path.lastIndexOf("/");
+        if (-1 == i)
+            return path;
+        return path.substring(++i);
+    }
+
     public static void main(String[] args) {
         System.out.println(fileName_("abc.xls"));
         System.out.println(fileName_("/xyz/abc.xls"));
@@ -70,43 +95,60 @@ public class RenderExcel extends Result {
 
     @Override
     public void apply(Request request, Response response) {
-        try {
-            if (!response.headers.containsKey("Content-Disposition")) {
-                if (inline) {
-                    if (fileName == null) {
-                        response.setHeader("Content-Disposition", "inline");
-                    } else {
-                        response.setHeader(
-                                "Content-Disposition",
-                                "inline; filename="
-                                        + encoder.encode(fileName, "utf-8"));
-                    }
-                } else if (fileName == null) {
-                    response.setHeader("Content-Disposition",
-                            "attachment; filename=export.xls");
-                } else {
-                    response.setHeader(
-                            "Content-Disposition",
-                            "attachment; filename="
-                                    + encoder.encode(fileName, "utf-8"));
+        if (null == excel) {
+            Logger.debug("use sync excel rendering");
+            long start = System.currentTimeMillis();
+            try {
+                if (null == tmplRoot) {
+                    initTmplRoot();
                 }
+                InputStream is = tmplRoot.child(templateName).inputstream();
+                Workbook workbook = new XLSTransformer()
+                        .transformXLS(is, beans);
+                workbook.write(response.out);
+                is.close();
+                Logger.debug("Excel sync render takes %sms", System.currentTimeMillis() - start);
+            } catch (Exception e) {
+                throw new UnexpectedException(e);
             }
-            if (templateName.matches(".*\\.(xlsx|xlxlsm|xltx|xltm)")) {
-                setContentTypeIfNotSet(response,
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
-            } else {
-                setContentTypeIfNotSet(response, "application/vnd.ms-excel");
+        } else {
+            Logger.debug("use async excel rendering...");
+            try {
+                response.out.write(excel);
+            } catch (IOException e) {
+                throw new UnexpectedException(e);
             }
+        }
+    }
 
+    private byte[] excel = null;
+
+    public void preRender() {
+        try {
             if (null == tmplRoot) {
                 initTmplRoot();
             }
             InputStream is = tmplRoot.child(templateName).inputstream();
             Workbook workbook = new XLSTransformer().transformXLS(is, beans);
-            workbook.write(response.out);
+            ByteArrayOutputStream os = new ByteArrayOutputStream();
+            workbook.write(os);
+            excel = os.toByteArray();
             is.close();
         } catch (Exception e) {
             throw new UnexpectedException(e);
         }
     }
+    
+    public static Promise<RenderExcel> renderAsync(final String templateName, final Map<String, Object> beans, final String fileName) {
+        final String fn = fileName == null ? fileName_(templateName) : fileName;
+        return new Job<RenderExcel>(){
+            @Override
+            public RenderExcel doJobWithResult() throws Exception {
+                RenderExcel excel = new RenderExcel(templateName, beans, fn);
+                excel.preRender();
+                return excel;
+            }
+        }.now();
+    }
+
 }

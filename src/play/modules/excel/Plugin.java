@@ -35,20 +35,33 @@ import play.vfs.VirtualFile;
 
 public class Plugin extends PlayPlugin {
     
-    private static final Pattern p_ = Pattern.compile(".*\\.(xls|xlsx)");
+    public static PlayPlugin templateLoader = null;
+    public static AsyncHacker hacker = null;
+    
+    private final static Pattern p_ = Pattern.compile(".*\\.(xls|xlsx)");
     @Override
     public Template loadTemplate(VirtualFile file) {
-        if (p_.matcher(file.getName()).matches()) return new ExcelTemplate(file);
-        return null;
+        if (!p_.matcher(file.getName()).matches()) return null;
+        if (null == templateLoader) return new ExcelTemplate(file);
+        return templateLoader.loadTemplate(file);
+    }
+    
+    public static interface AsyncHacker {
+        void hack();
     }
 
     public static class ExcelTemplate extends Template {
         
         private File file = null;
+        private RenderExcel r_ = null;
         
-        private ExcelTemplate(VirtualFile file) {
+        public ExcelTemplate(VirtualFile file) {
             this.name = file.relativePath();
             this.file = file.getRealFile();
+        }
+        
+        public ExcelTemplate(RenderExcel render) {
+            r_ = render;
         }
 
         @Override
@@ -58,8 +71,8 @@ public class Plugin extends PlayPlugin {
 
         @Override
         protected String internalRender(Map<String, Object> args) {
-            throw new RenderExcel(name, args);
+            throw null == r_ ? new RenderExcel(name, args) : r_;
         }
-        
     }
+
 }

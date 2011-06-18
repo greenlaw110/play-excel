@@ -11,6 +11,7 @@
         <fileset dir="lib">
             <include name="*.jar"/>
         </fileset>
+        <pathelement path="tmp/appclasses"/>
     </path>
 
     <target name="build" depends="compile">
@@ -40,5 +41,5 @@
             <classpath refid="project.classpath" />
         </javac>
     </target>
-
+    
 </project>

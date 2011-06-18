@@ -29,9 +29,8 @@ public class Contact extends Model {
     public static class BootLoader extends Job<Object> {
         @Override
         public void doJob() {
-            if (Contact.count() == 0) {
-                Fixtures.loadModels("initial-data.yml");
-            }
+            Fixtures.delete(Contact.class);
+            Fixtures.loadModels("initial-data.yml");
         }
     }
 }
