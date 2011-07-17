@@ -29,7 +29,7 @@ import play.vfs.VirtualFile;
 @SuppressWarnings("serial")
 public class RenderExcel extends Result {
 
-    public static final String RA_FILENAME = "__EXCEL_FILE_NAME__";
+    public static final String RA_FILENAME = "__FILE_NAME__";
     public static final String RA_ASYNC = "__EXCEL_ASYNC__";
     public static final String CONF_ASYNC = "excel.async";
 

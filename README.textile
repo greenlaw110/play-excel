@@ -9,6 +9,14 @@ The tool uses the jxls library.
 
 In order to use the Excel module, you need to create an Excel based template - see http://jxls.sourceforge.net for details instruction.
 
+h2. <a>What's New in v1.2.3
+
+* Fix bug: NPE at Plugin.onActionInvocationResult (line 104) in rare case (http.request is null)
+
+h2. <a>What's New in v1.2.2
+
+* @With(ExcelControllerHelper.class) no longer required for Controller rendering Excel/CSV reports
+
 h2. <a>What's New in v1.2.1
 
 * Transparent async rendering
@@ -22,6 +30,8 @@ h2. <a>What's New in v1.2
 * API changes
 ** renderExcel() call removed
 ** previously use "fileName" renderArg to denote filename of the Excel file generated, now please use RenderExcel.RA_FILENAME instead
+
+Note, you will need to add @With(ExcelControllerHelper.class) annotation to your controller class where you want to generate Excel report
 
 h2. <a>What's New in v1.0a
 
@@ -54,6 +64,8 @@ The renderExcel() behavior is almost the same as that of render() except the fol
 
 h2. <a>Set request.format</a> *New in v1.2*
 
-Set request.format to 'xls' or 'xlsx' to render user Excel template. The excel template should be put in the same dir as normal html template, the file suffix shall comply with request.format setting. An easy way to set request.format is via route configuration. Please refer to http://www.playframework.org/documentation/1.2.1/routes#content-types for detail
+Set request.format to 'xls' or 'xlsx' to render user Excel template. The excel template should be put in the same dir as normal html template, the file suffix shall comply with request.format setting. An easy way to set request.format is via route configuration. Please refer to http://www.playframework.org/documentation/1.2.1/routes#content-types for detail.
+
+For v1.2 and v1.2.1 please make sure you have @With(ExcelControllerHelper.class) annotation on your controller class if you want to generate Excel report. This is no longer needed for v1.2.2
 
 Please refer to the sample for an example.

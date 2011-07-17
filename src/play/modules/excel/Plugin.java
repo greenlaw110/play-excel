@@ -24,19 +24,28 @@
 package play.modules.excel;
 
 import java.io.File;
+import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import org.apache.commons.codec.net.URLCodec;
+
 import play.PlayPlugin;
 import play.exceptions.UnexpectedException;
+import play.mvc.Http.Request;
+import play.mvc.Http.Response;
+import play.mvc.Scope.RenderArgs;
+import play.mvc.results.Result;
 import play.templates.Template;
 import play.vfs.VirtualFile;
 
 
 public class Plugin extends PlayPlugin {
     
+    public static final String VERSION = "1.2.3";
+
     public static PlayPlugin templateLoader = null;
-    public static AsyncHacker hacker = null;
     
     private final static Pattern p_ = Pattern.compile(".*\\.(xls|xlsx)");
     @Override
@@ -46,10 +55,64 @@ public class Plugin extends PlayPlugin {
         return templateLoader.loadTemplate(file);
     }
     
-    public static interface AsyncHacker {
-        void hack();
+    /**
+     * Extend play format processing
+     */
+    @Override
+    public void beforeActionInvocation(Method actionMethod) {
+        Request request = Request.current();
+        if (request.headers.get("accept") != null) {
+            String accept = request.headers.get("accept").value();
+            if (accept.indexOf("text/csv") != -1)
+                request.format = "csv";
+            if (accept
+                    .matches(".*application\\/(excel|vnd\\.ms\\-excel|x\\-excel|x\\-msexcel).*"))
+                request.format = "xls";
+            if (accept
+                    .indexOf("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet") != -1)
+                request.format = "xlsx";
+        }
     }
+    
+    /*
+     * Set response header if needed
+     */
+    private static final URLCodec encoder = new URLCodec();
+    @Override
+    public void onActionInvocationResult(Result result) {
+        Request request = Request.current();
+        if (null == request.format || !request.format.matches("(csv|xls|xlsx)"))
+            return;
 
+        Response response = Response.current();
+        RenderArgs renderArgs = RenderArgs.current();
+        if (!response.headers.containsKey("Content-Disposition")) {
+            String fileName = renderArgs.get(RenderExcel.RA_FILENAME,
+                    String.class);
+            if (fileName == null) {
+                response.setHeader("Content-Disposition",
+                        "attachment; filename=export." + request.format);
+            } else {
+                try {
+                    response.setHeader(
+                            "Content-Disposition",
+                            "attachment; filename="
+                                    + encoder.encode(fileName, "utf-8"));
+                } catch (UnsupportedEncodingException e) {
+                    throw new UnexpectedException(e);
+                }
+            }
+
+            if ("xls".equals(request.format)) {
+                response.setContentTypeIfNotSet("application/vnd.ms-excel");
+            } else if ("xlsx".equals(request.format)) {
+                response.setContentTypeIfNotSet("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+            } else if ("csv".equals(request.format)) {
+                response.setContentTypeIfNotSet("text/csv");
+            }
+        }
+    }
+    
     public static class ExcelTemplate extends Template {
         
         private File file = null;
