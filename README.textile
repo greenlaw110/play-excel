@@ -11,6 +11,7 @@ In order to use the Excel module, you need to create an Excel based template - s
 
 h2. <a>What's New in v1.2.3
 
+* Fix bug: Plugin.beforeActionInvocation does not work with IE8
 * Fix bug: NPE at Plugin.onActionInvocationResult (line 104) in rare case (http.request is null)
 
 h2. <a>What's New in v1.2.2

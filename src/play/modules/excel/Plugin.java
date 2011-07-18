@@ -33,6 +33,7 @@ import org.apache.commons.codec.net.URLCodec;
 
 import play.PlayPlugin;
 import play.exceptions.UnexpectedException;
+import play.mvc.Http.Header;
 import play.mvc.Http.Request;
 import play.mvc.Http.Response;
 import play.mvc.Scope.RenderArgs;
@@ -55,12 +56,18 @@ public class Plugin extends PlayPlugin {
         return templateLoader.loadTemplate(file);
     }
     
+    
+    private static Pattern pIE678_ = Pattern.compile(".*MSIE\\s+[6|7|8]\\.0.*");
     /**
      * Extend play format processing
      */
     @Override
     public void beforeActionInvocation(Method actionMethod) {
         Request request = Request.current();
+        Header h = request.headers.get("user-agent");
+        if (null == h) return;
+        String userAgent = h.value();
+        if (pIE678_.matcher(userAgent).matches()) return; // IE678 is tricky!, IE678 is buggy, IE678 is evil!
         if (request.headers.get("accept") != null) {
             String accept = request.headers.get("accept").value();
             if (accept.indexOf("text/csv") != -1)
