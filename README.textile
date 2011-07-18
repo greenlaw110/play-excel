@@ -49,7 +49,7 @@ bc. # The Excel module
 module.Excel=${play.path}/modules/Excel
 excel.template.root=app/views
 
-note, please change the excel.template.root from app/views to some where else when you use excel module with Play version 1.02 or before. Otherwise your application will not be able to startup on product mode.
+-note, please change the excel.template.root from app/views to some where else when you use excel module with Play version 1.02 or before. Otherwise your application will not be able to startup on product mode.-
 
 h2. <a>Using the Excel module</a>
 
