@@ -13,6 +13,7 @@ h2. <a>What's New in v1.2.3
 
 * Fix bug: Plugin.beforeActionInvocation does not work with IE8
 * Fix bug: NPE at Plugin.onActionInvocationResult (line 104) in rare case (http.request is null)
+* Document updates
 
 h2. <a>What's New in v1.2.2
 
@@ -32,7 +33,10 @@ h2. <a>What's New in v1.2
 ** renderExcel() call removed
 ** previously use "fileName" renderArg to denote filename of the Excel file generated, now please use RenderExcel.RA_FILENAME instead
 
-Note, you will need to add @With(ExcelControllerHelper.class) annotation to your controller class where you want to generate Excel report
+Note, 
+
+* for version 1.2 and 1.2.1, you will need to add @With(ExcelControllerHelper.class) annotation to your controller class where you want to generate Excel report
+* start from v1.2.2, @With(ExcelControllerHelper.class) is NO longer needed for report generating
 
 h2. <a>What's New in v1.0a
 
@@ -49,7 +53,10 @@ bc. # The Excel module
 module.Excel=${play.path}/modules/Excel
 excel.template.root=app/views
 
--note, please change the excel.template.root from app/views to some where else when you use excel module with Play version 1.02 or before. Otherwise your application will not be able to startup on product mode.-
+note:
+
+* (before v1.2)Please change the excel.template.root from app/views to some where else when you use excel module with Play version 1.02 or before. Otherwise your application will not be able to startup on product mode.-
+* start from v1.2, excel.template.root is no longer needed. You put your excel templates directly into app/views folder, following the same convention as your html templates.
 
 h2. <a>Using the Excel module</a>
 
