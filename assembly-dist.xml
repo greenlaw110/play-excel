@@ -38,8 +38,6 @@ under the License.
                 <include>documentation/**</include>
                 <include>src/**</include>
                 <include>assembly-dist.xml</include>
-                <include>build.bat</include>
-                <include>build.xml</include>
                 <include>MIT-LICENSE.txt</include>
                 <include>pom.xml</include>
                 <include>README.textile</include>
