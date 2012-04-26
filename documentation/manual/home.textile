@@ -47,11 +47,9 @@ h2. <a>What's New in v1.0a
 
 h2. <a>Enable the Excel module for the application</a>
 
-In the **/conf/application.conf** file, enable the Excel module by adding this line:
+Add the following line into @required@ section of @conf/dependencies.yml@:
 
-bc. # The Excel module
-module.Excel=${play.path}/modules/Excel
-excel.template.root=app/views
+bc.    - play -> excel 1.2.3
 
 note:
 
@@ -77,3 +75,7 @@ Set request.format to 'xls' or 'xlsx' to render user Excel template. The excel t
 For v1.2 and v1.2.1 please make sure you have @With(ExcelControllerHelper.class) annotation on your controller class if you want to generate Excel report. This is no longer needed for v1.2.2
 
 Please refer to the sample for an example.
+
+h2. <a>See also</a>
+
+* "Play!Framework: Use RenderArgs and Excel module effectively":http://software-lgl.blogspot.com.au/2011/10/playframework-use-renderargs-and-excel.html
