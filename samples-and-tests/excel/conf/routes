@@ -5,10 +5,9 @@
 # Home page
 GET     /                                       Application.index
 GET     /person/{<[0-9]+>id}/namecard           Application.generateNameCard
-GET     /addressBook                            Application.generateAddressBook
+GET     /addressBook                            Application.generateAddressBook(format:'xlsx')
 
 # Map static resources from the /app/public folder to the /public path
 GET     /public/                                staticDir:public
 
 # Catch all
-*       /{controller}/{action}                  {controller}.{action}
