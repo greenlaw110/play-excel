@@ -31,6 +31,7 @@ public class Application extends Controller {
     	Date date = new Date();
     	String __EXCEL_FILE_NAME__ = "address_book.xlsx";
     	renderArgs.put(RenderExcel.RA_ASYNC, true);
+    	request.format = "xlsx";
         render(__EXCEL_FILE_NAME__, contacts, date);
         Logger.info("generateAddressBook exit");
     }
